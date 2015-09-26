@@ -41,6 +41,7 @@ namespace Wishround.UI.Logic
         private void InitializeProductProperties(){
             _productProps.Add("Title", new OpenGraphMetaProperty("og:title"));
             _productProps.Add("Description", new OpenGraphMetaProperty("og:description"));
+            _productProps.Add("Image", new OpenGraphMetaProperty("og:image") );
         }
 
         public ProductPageDataAnalyzer(string url, string html) : this(url){
@@ -62,6 +63,13 @@ namespace Wishround.UI.Logic
             get {
                 // ensure HTML content is loaded
                 return GetProductProperty<string>("Description"); 
+            }
+        }
+
+        public string ProductImageUrl{
+            get{
+                // ensure HTML provided
+                return GetProductProperty<string>("Image");
             }
         }
 
