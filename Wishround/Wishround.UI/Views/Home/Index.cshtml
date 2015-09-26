@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<div id="wishHolder">
+    @using (Html.BeginForm("Wish", "Home", FormMethod.Get)){
+        <input id="wishTextBox" type="text" placeholder="Make a wish" size="100" name="url"/>
+        <br/>
+        <button class="large green">Хочу желание</button>
+    }
+    
+ 
+
+</div>
