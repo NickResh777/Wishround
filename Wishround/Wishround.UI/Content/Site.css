@@ -1,6 +1,7 @@
 ﻿body {
     padding: 0;
     margin: 0;
+    background: whitesmoke;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -36,4 +37,51 @@ textarea {
 
 #wishTextBox {
     height: 50px;
+}
+
+#product-properties {
+    
+}
+
+#product-image-holder {
+    padding: 0;
+    border: 1px solid #333;
+    background: silver;
+    width: 270px;
+    height: 270px;
+    text-align: center;
+    float: left;
+    -ms-border-radius: 4px 4px;
+    border-radius: 4px 4px;
+    position: relative;
+}
+
+
+#product-image-holder > img {
+    border: 0;
+    padding: 0;
+    height:  250px;
+    height: 250px;
+    position: absolute;
+    font-size: 0;
+    top: 10px;
+    left: 10px;
+}
+
+
+.product-property-name {
+    font-weight: bold;
+    margin-right: 30px;
+}
+
+.price {
+    font-size: 120%;
+    font-family: Consolas, Arial;
+    font-weight: bolder;
+    color: darkgreen;
+}
+
+#right-panel {
+    float: left;
+    margin-left: 30px;
 }

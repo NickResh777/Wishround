@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,14 +9,16 @@ using System.Text;
 using System.Web;
 using System.Windows.Forms;
 using Wishround.UI.Logic.Entry;
+using Wishround.UI.Logic.Parsers;
 
 namespace Wishround.UI.Logic
 {
     public class ProductPageDataAnalyzer{
-        private readonly Uri _uri;
-        private string _html;
+        private readonly Uri     _uri;
+        private          string  _htmlContent;
+        private readonly bool    _isFoxtrotShop;
   
-        private readonly Hashtable _productProps = new Hashtable();
+        private readonly Hashtable _productPropsParsers = new Hashtable();
 
 
 
@@ -34,19 +37,25 @@ namespace Wishround.UI.Logic
             }
 
 
-           
+            _isFoxtrotShop = _uri.AbsoluteUri.IndexOf("foxtrot.com.ua") >= 0;
             InitializeProductProperties();
         }
 
         private void InitializeProductProperties(){
-            _productProps.Add("Title", new OpenGraphMetaProperty("og:title"));
-            _productProps.Add("Description", new OpenGraphMetaProperty("og:description"));
-            _productProps.Add("Image", new OpenGraphMetaProperty("og:image") );
+            _productPropsParsers.Add("Title", new OpenGraphMetaPropertyParser("og:title"));
+            _productPropsParsers.Add("Description", new OpenGraphMetaPropertyParser("og:description"));
+            _productPropsParsers.Add("Image", new OpenGraphMetaPropertyParser("og:image"));
+            _productPropsParsers.Add("Price", _isFoxtrotShop ? (object) new FoxtrotPriceTagPropertyEntry() 
+                                                      : new NullPropertyParser<decimal>());
+            _productPropsParsers.Add("Currency", _isFoxtrotShop ? (object)new FoxtrotCurrencyPropertyParser() 
+                                                      : new NullPropertyParser<string>());
+            _productPropsParsers.Add("Code", _isFoxtrotShop ? (object) new FoxtrotProductCodePropertyParser() 
+                                                       : new NullPropertyParser<string>());
         }
 
         public ProductPageDataAnalyzer(string url, string html) : this(url){
            
-            _html = html;
+            _htmlContent = html;
         }
 
         /// <summary>
@@ -73,12 +82,30 @@ namespace Wishround.UI.Logic
             }
         }
 
+        public decimal ProductPrice{
+            get{
+                return GetProductProperty<decimal>("Price");
+            }
+        }
+
+        public string ProductCurrency{
+            get{
+                return GetProductProperty<string>("Currency");
+            }
+        }
+
+        public string ProductCode{
+            get{
+                return GetProductProperty<string>("Code");
+            }
+        }
+
         private TParam GetProductProperty<TParam>(string property){
              EnsureHtmlProvided();
-             PropertyEntryBase entry = (PropertyEntryBase) _productProps[property];
+             PropertyParserBase entry = (PropertyParserBase) _productPropsParsers[property];
              if (entry == null)
                  throw new ArgumentException("Property not defined!");
-             entry.Html = _html;
+             entry.Html = _htmlContent;
              entry.Uri = _uri;
              return (TParam)entry.Value;
         }
@@ -87,12 +114,12 @@ namespace Wishround.UI.Logic
         private static void ValidateResponse(HttpWebResponse response){
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new Exception("Not 200 (OK) return code from server!");
-            if (!(response.ContentType ?? string.Empty).Contains("text/html"))
+            if (!(response.ContentType).Contains("text/html"))
                 throw new Exception("Not valid HTML content response!");
         }
 
         private void EnsureHtmlProvided(){
-            if (_html == null){
+            if (_htmlContent == null){
 
                 try{
                     HttpWebRequest request = (HttpWebRequest) WebRequest.Create(_uri);
@@ -117,7 +144,7 @@ namespace Wishround.UI.Logic
 
                     using (StreamReader reader = new StreamReader(responseStream)){
 
-                        _html = reader.ReadToEnd();
+                        _htmlContent = reader.ReadToEnd();
                     }
                 }catch (WebException webEx){
 

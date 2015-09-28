@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
-using System.Security.Policy;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
+using Wishround.UI.Logic.Entry;
 
-namespace Wishround.UI.Logic.Entry
+namespace Wishround.UI.Logic.Parsers
 {
-    public sealed class OpenGraphMetaProperty: PropertyEntryBase{
+    public sealed class OpenGraphMetaPropertyParser: PropertyParserBase{
         private readonly string _property;
 
         /// <summary>
         /// [og:title], [og:description]
         /// </summary>
         /// <param name="property"></param>
-        public OpenGraphMetaProperty(string property){
+        public OpenGraphMetaPropertyParser(string property){
             _property = property;
         }
 
@@ -41,18 +38,17 @@ namespace Wishround.UI.Logic.Entry
         }
 
         private string GetContentValue(string metaTag){
-            const string cc = "content=";
-            int contentStartIndex = metaTag.IndexOf(cc);
+            const string contentAttr = "content=";
+            int contentStartIndex = metaTag.IndexOf(contentAttr);
 
             string result = string.Empty;
             if (contentStartIndex >= 0){
                 // skip the OPEN quote symbol
-                result = metaTag.Substring((contentStartIndex + cc.Length) + 1);
+                result = metaTag.Substring((contentStartIndex + contentAttr.Length) + 1);
                 
-                // skip the CLOSE quote symbol 
-                result = result.Substring(0, result.Length - 1);
+              
 
-                int lastEscapedcharIndex = result.Length - 1;
+                int lastEscapedCharIndex = result.Length - 1;
                 char currentChar = result.LastOrDefault();
                 if (currentChar == 0)
                     return result;
@@ -60,11 +56,12 @@ namespace Wishround.UI.Logic.Entry
                 while (currentChar == '\\' ||
                        currentChar == '\"' ||
                        currentChar == '/'  ||  
+                       currentChar == '>' ||
                        currentChar == ' '){
-                    currentChar = result[lastEscapedcharIndex--];
+                    currentChar = result[lastEscapedCharIndex--];
                 }
 
-                result = result.Substring(0, lastEscapedcharIndex);
+                result = result.Substring(0, (lastEscapedCharIndex + 2));
             }
 
             return result;

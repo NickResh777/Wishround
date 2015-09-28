@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Wishround.UI.Logic;
+using Wishround.UI.Models;
 
 namespace Wishround.UI.Controllers
 {
@@ -18,10 +19,26 @@ namespace Wishround.UI.Controllers
         {
             ProductPageDataAnalyzer analyzer = new ProductPageDataAnalyzer(url);
 
-            string title = analyzer.ProductTitle;
-            string description = analyzer.ProductDescription;
 
-            return View();
+            ProductEntity product = new ProductEntity{
+                ProductUrl = url,
+                Code = analyzer.ProductCode,
+                Title = analyzer.ProductTitle,
+                Description = analyzer.ProductDescription,
+                ImageUrl = analyzer.ProductImageUrl,
+                Currency = analyzer.ProductCurrency,
+                Price = analyzer.ProductPrice
+            };
+
+
+            return View(product);
+        }
+
+        [HttpPost]
+        public ActionResult CommitWish(ProductEntity product){
+            
+            ProductsStorage.Instance.SaveProduct(product);
+            return View("ShareWish", product);
         }
 
         public ActionResult Contact()

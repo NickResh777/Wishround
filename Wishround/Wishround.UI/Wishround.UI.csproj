@@ -161,9 +161,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Logic\Entry\EntryBase.cs" />
-    <Compile Include="Logic\Entry\OpenGraphMetaProperty.cs" />
-    <Compile Include="Logic\PageData.cs" />
+    <Compile Include="Logic\LiqPayApi.cs" />
+    <Compile Include="Logic\Parsers\FoxtrotCurrencyPropertyParser.cs" />
+    <Compile Include="Logic\Parsers\FoxtrotProductCodePropertyParser.cs" />
+    <Compile Include="Logic\Parsers\NullPropertyParser.cs" />
+    <Compile Include="Logic\Parsers\PropertyParserBase.cs" />
+    <Compile Include="Logic\Parsers\OpenGraphMetaPropertyParser.cs" />
+    <Compile Include="Logic\Parsers\FoxtrotPriceTagPropertyEntry.cs" />
+    <Compile Include="Logic\ProductPageDataAnalyzer.cs" />
+    <Compile Include="Models\ProductEntity.cs" />
+    <Compile Include="Logic\ProductsStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -276,10 +283,11 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Home\Wish.cshtml" />
+    <Content Include="Views\Home\ShareWish.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

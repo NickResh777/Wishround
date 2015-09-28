@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "ShareWish";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Wishround.UI.Logic
+@model  Wishround.UI.Models.ProductEntity
+
+<div>
+    <div id="product-image-holder">
+        <img src="@Model.ImageUrl" title="@Model.Description" alt="@Model.Description" />
+    </div>
+    <div id="right-panel">
+        <div id="product-properties">
+            <table class="striped">
+                <tr>
+                    <td>
+                        <span class="product-property-name">Название:</span>
+                    </td>
+                    <td>
+                        <span>@Model.Title</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="product-property-name">Описание:</span>
+                    </td>
+                    <td>
+                        @Html.HiddenFor(m => m.Description)
+                        <span>@Model.Description</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="product-property-name">Код товара:</span>
+                    </td>
+                    <td>
+                        <span>@Model.Code</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="product-property-name">Цена:</span>
+                    </td>
+                    <td>
+                        <span class="price">@Model.Price</span>
+                        <span>
+                                @Model.Currency
+                        </span>
+                    </td>
+                </tr>
+            </table>
+            <form method="GET" action="https://www.liqpay.com/api/checkout" accept-charset="utf-8">
+                <input type="hidden" name="data" value="@LiqPayApi.BuildDataFormParameter(Model) "/>
+                <input type="hidden" name="signature" value="@LiqPayApi.BuildSignatureFormParameter(Model)"/>
+                <button class=" large green" type="submit">Скинуться</button>
+            </form>
+            <button class="large blue">Запостить на Фейсбуке</button>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+</div>
+

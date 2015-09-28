@@ -1,22 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace Wishround.UI.Logic.Entry
+namespace Wishround.UI.Logic.Parsers
 {
-    public abstract class PropertyEntryBase{
+    public abstract class PropertyParserBase{
         private bool   _valueSet;
         private object _value;
         private Uri    _url;
         private string _html;
-
-
-        public bool ValueSet{
-            get{
-                return _valueSet;
-            }
-        }
 
 
         public string Html{

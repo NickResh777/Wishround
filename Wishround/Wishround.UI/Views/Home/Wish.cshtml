@@ -1,0 +1,65 @@
+﻿
+@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+@model  Wishround.UI.Models.ProductEntity
+
+<div>
+    <div id="product-image-holder">
+        <img src="@Model.ImageUrl" title="@Model.Description" alt="@Model.Description"/>
+    </div>
+<div id="right-panel">
+    <div id="product-properties">
+        @using (Html.BeginForm("CommitWish", "Home", FormMethod.Post)){
+            @Html.Hidden("ProductUrl", Model.ProductUrl)
+            @Html.Hidden("ImageUrl", Model.ImageUrl)
+            @Html.Hidden("Code", Model.Code)
+            <table>
+                <tr>
+                    <td>
+                        <span class="product-property-name">Название:</span>            
+                    </td>
+                    <td>
+                        @Html.HiddenFor(m => m.Title)
+                        <span>@Model.Title</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="product-property-name">Описание:</span>
+                    </td>
+                    <td>
+                        @Html.HiddenFor(m => m.Description)
+                        <span>@Model.Description</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>      
+                        <span class="product-property-name">Код товара:</span>
+                    </td>
+                    <td>
+                        <input type="text" placeholder="@Model.Code" name="Code"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="product-property-name">Цена:</span>
+                    </td>
+                    <td>
+                        <input type="text" value="@Model.Price" name="Price"/>
+                        <select name="Currency">
+                            <option value="UAH">UAH</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <button class="large green">Далее</button>
+        }
+    </div>
+    <div style="clear: both;"></div>
+</div>
+</div>
